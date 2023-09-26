@@ -3,3 +3,5 @@
 .RData
 .Ruserdata
 Quarto.Rproj
+/.quarto/
+/_site/
