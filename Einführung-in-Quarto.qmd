@@ -1,0 +1,454 @@
+---
+title: Reproduzierbare Wissenschaft mit Hilfe von Quarto
+author: Johann Popp
+date: last-modified
+
+format:
+  html:
+    self-contained: true
+    grid:
+      margin-width: 350px
+  pdf: default
+reference-location: margin
+number-sections: true
+echo: false
+lang: de
+bibliography: references.bib
+
+#csl: american-journal-of-archaeology.csl
+csl: sage-vancouver-brackets.csl
+---
+
+Im Sinne reproduzierbarer Wissenschaft ist es wünschenswert, die gesamte Datenanalyse vom Laden der Daten über die Datenaufbereitung, deskriptive Analyse, Modellbildung bis hin zur Beschreibung und Interpretation in einem Quelldokument zusammenzufassen, aus dem dann Berichte und Präsentationen erzeugt werden können. Quarto [@allaire2022, <https://quarto.org>] hilft Ihnen dabei, indem es Freitext mit Programmcode aus R, Python, Julia und anderen Programmiersprachen zu einem Quelldokument verknüpft. Aus diesem Dokument werden dann Berichte und Präsentationen in verschiedenen Formaten (z.b. HTML, PDF, MS-Word) erzeugt.
+
+Quarto ist das Nachfolgeprogramm von R Markdown [@xie2018]. Ich demonstriere es hier in Verknüpfung mit R [@rcoreteam2018] und RStudio [@rstudioteam2021]. Es funktioniert aber auch unabhängig davon z.B. mit Jupyter Notebooks [@kluyver2016].
+
+# Beispiel
+
+Sehen Sie sich zum Beispiel einmal das Quelldokument aus @fig-source an und das HTML-Dokument (@fig-html), das daraus generiert wurde. Dieses Handout wird Sie Schritt für Schritt durch die Erstellung dieses Beispieldokuments leiten und dabei wesentliche Quarto-Methoden erklären.
+
+```{r}
+#| label: fig-source
+#| fig-cap: Beispiel für ein Quarto-Quelldokument
+#| fig-column: page-right
+
+# Dezimaltrenner auf "," setzen
+options(OutDec = ",")
+
+knitr::include_graphics("Bilder/Source.png")
+```
+
+```{r}
+#| label: fig-html
+#| fig-cap: Beispiel für eine HTML-Ausgabe eines Quarto-Dokuments
+#| fig-column: page-right
+
+knitr::include_graphics("Bilder/BeispielHTML.png")
+```
+
+\newpage
+
+## Erstellen eines Quarto-Quelltext-Dokumentes
+
+Ein Quarto-Quelltext-Dokument ist erst einmal nichts anderes als eine Textdatei mit der Dateinamensendung .qmd. Wenn Sie dieses Dokument aus RStudio heraus erstellen, können Sie auf eine Reihe von Arbeitshilfen zurückgreifen, nicht zuletzt wurde Quarto auch automatisch zusammen mit RStudio installiert.
+
+::: column-margin
+*New - New File - Quarto Document...*
+:::
+
+Um jetzt also ein Quarto-Dokument zu erstellen, klicken Sie links oben ![New File](Bilder/Neu.png){height="18px"} und dann ![Quarto Neu](Bilder/QuartoNeu.png){height="18px"}, um zu folgendem Dialogfeld zu gelangen:
+
+```{r}
+#| label: fig-quartoDialog
+#| fig-cap: Dialogfeld zur Erstellung eines Quarto-Dokuments.
+#| cap-location: margin
+
+knitr::include_graphics("Bilder/QuartoDialog.png")
+```
+
+In der linken Spalte dieses Dialogfeldes können Sie zwischen Vorlagen für Dokumente, Präsentationen oder interaktive Dokumente wählen. Bleiben Sie hier erst einmal bei *Document*.
+
+Rechts können Sie Titel und Autor/in des Dokuments angeben. Sie können außerdem zwischen den Ausgabeformaten *HTML*, *PDF* oder *Word* auswählen. Bleiben Sie bei der Vorgabe *HTML*. Die "Engine" können Sie gut bei *Knitr* belassen. Bei "Editor" wählen Sie aber bitte fürs erste "Use visual markdown editor" ab.
+
+Klicken Sie jetzt *Create Empty Document*.
+
+Jetzt wird ein Quarto-Quelltextdokument geöffnet, das so wie in @fig-quelle01 aussehen sollte.
+
+```{r}
+#| label: fig-quelle01
+#| fig-cap: Ein leeres Quarto-Quelldokument
+#| fig-column: page-right
+
+knitr::include_graphics("Bilder/quartoBeisp01.png")
+```
+
+Sieht es bei Ihnen anders aus? Vielleicht haben Sie mehr als fünf Zeilen Quelltext? Dann haben Sie aus Versehen *Create* statt *Create Empty Document* geklickt. Das ist nicht schlimm. Löschen Sie dann einfach alles, ab Zeile 6.
+
+Was Sie hier in den ersten fünf Zeilen sehen ist der sogenannte YAML-Header. Hier werden grundsätzliche Informationen angegeben, die das gesamte Dokument betreffen. Im Moment haben Sie den Titel des Dokumentes, den Autor oder die Autorion und das Ausgabeformat (html) angegeben. Wir werden später noch einmal auf den YAML-header zurück kommen.
+
+::: column-margin
+Freitext eingeben
+:::
+
+Geben Sie jetzt die ersten Absätze Freitext ein, wie in @fig-quelle02 .
+
+```{r}
+#| label: fig-quelle02
+#| fig-cap: Quarto-Quelltext mir Freitext
+#| fig-column: page-right
+
+knitr::include_graphics("Bilder/quartoBeisp02.png")
+```
+
+\newpage
+
+::: column-margin
+Ausgabedokument mit *Render* erzeugen
+:::
+
+Klicken Sie Jetzt auf ![](Bilder/Render.png){width="64"}, um aus dem Quelldokument ein HTML-Ausgabedokument zu generieren. Das Ergebniss sollte etwa so aussehen wie in @fig-html02.
+
+```{r}
+#| label: fig-html02
+#| fig-cap: Erste HTML-Ausgabe eines Quarto-Dokuments.
+#| fig-column: page-right
+
+knitr::include_graphics("Bilder/html02.png")
+```
+
+Wahrscheinlich wurde das Ausgabedokument bei Ihnen nicht innerhalb von RStudio angezeigt, sondern in Ihrem Internet-Browser. Für das Erstellen des Dokuments ist es praktischer, wenn Sie die Ausgabe direkt neben dem Quelldokument in RStudio sehen können. Wählen Sie dafür in den Einstellungen *Preview in Viewer Pane* aus (und klicken Sie noch einmal ![](Bilder/Render.png){width="63" height="19"}).
+
+```{r}
+#| fig-column: margin
+
+knitr::include_graphics("Bilder/previewViewer.png")
+```
+
+::: column-margin
+Markdown-Format
+:::
+
+Das Ausgabedokument zeigt zuerst Titel und Autor aus dem YAML-header. Dann folgt der Text, den Sie eingegeben haben. Auffällig ist, dass die Überschrift "Beispiel" im Quelldokument `# Beispiel` geschrieben wurde. Formatierungen werden nämlich im Quelldokument durch bestimmte Zeichen gekennzeichnet und nicht unmittelbar im Ergebnis sichtbar. (Überschriften der zweiten Gliederungsebene werden z.B. durch zwei Rauten gekennzeichnet, *kursive Schrift* durch ein Sternchen zu Beginn und zum Ende). Dieses Kodierungsschema nennt sich *Markdown* [@gruber2004].
+
+::: column-margin
+*Visual*-Modus
+:::
+
+Sie Brauchen sich nicht alle Markdown-Kodierungen merken, denn in Quarto können die Quelltexte auch im *Visual*-Modus ansehen. Klicken Sie links oben doch einmal auf ![](Bilder/Visual.png){width="49" height="19"}.
+
+```{r}
+#| fig-cap: Quarto-Quelldokument im *Visual*-Modus
+#| fig-column: page-right
+
+knitr::include_graphics("Bilder/quartoBeisp03.png")
+
+```
+
+In diesem Modus sehen die Textformatierungen so aus, wie im Ausgabedokument. Außerdem erscheint eine Symbolleiste, in der Sie per Mausklick Textformatierungen einstellen, Aufzählungen und Nummerierungen generieren und weitere Elemente einfügen können.
+
+![](Bilder/Symbolleiste.png)
+
+Ich empfehle Ihnen, immer wieder zwischen dem *Source*-Modus und dem *Visual*-Modus hin und her zu schalten. Manche Dinge funktionieren hier einfacher, andere dort.
+
+## R-Syntax einfügen
+
+::: column-margin
+*Insert - Executable Cell - R*
+:::
+
+Fügen Sie jetzt R-Syntax hinzu, indem Sie rechts oben ![](Bilder/addChunk.png){width="30"} klicken. Es erscheint ein graues Feld, beginnend mit `{r}`, in dass Sie R-Funktionen wie in einem gewöhnlichen R-Skript eingeben können. Das nennt sich *R-Chunk*. Erstellen Sie doch gleich mal die fiktionalen Daten, mit denen Sie rechnen wollen.
+
+```{r}
+#| label: fig-chunk01
+#| fig-cap: Erster R-Chunk innerhalb eines Quarto-Dokuments
+#| fig-column: page-right
+
+knitr::include_graphics("Bilder/chunk01.png")
+```
+
+Es wird eine Datenmatrix erstellt, mit einer Variable "Gruppe", die 100 mal "A" enthält und 100 mal "B", sowie einer Variable "Wert", die 100 normalverteilte Zufallszahlen um den Mittelwert 3 enthält und 100 um den Mittelwert 4. Um die Funktion auszuführen, klicken Sie wie in normalen R-Skripten rechts oben auf ![](Bilder/chunkRun.png) oder auf der Tastatur *Strg - Enter*.
+
+Ordnen Sie die Daten einem Obejkt zu, da Sie sie nicht einfach nur einmal ausgeben lassen, sondern mit ihnen weiter arbeiten wollen.
+
+::: column-margin
+Daten erzeugen und dem Objekt `dat` zuweisen
+:::
+
+```{r}
+#| echo: fenced
+
+# Daten erzeugen
+dat <- data.frame(Gruppe = rep(c("A", "B"), each = 100),
+                  Wert = c(rnorm(100, mean = 3), 
+                           rnorm(100, mean = 4)))
+```
+
+Mit diesen Daten können Sie nun einen Boxplot erzeugen. (Er sieht vielleicht ein wenig anders aus als in diesem Handout, weil er auf Zufallszahlen basiert.)
+
+::: column-margin
+Einen Boxplot hinzufügen
+:::
+
+```{r}
+#| eval: false
+#| echo: true
+
+# Daten erzeugen
+dat <- data.frame(Gruppe = rep(c("A", "B"), each = 100),
+                  Wert = c(rnorm(100, mean = 3), 
+                           rnorm(100, mean = 4)))
+
+# Boxplot
+boxplot(Wert ~ Gruppe, data = dat)
+```
+
+Schauen Sie sich jetzt mit ![](Bilder/Render.png){width="64"} an, wie das ganze im Ausgabedokument aussieht:
+
+```{r}
+#| echo: true
+
+# Daten erzeugen
+dat <- data.frame(Gruppe = rep(c("A", "B"), each = 100),
+                  Wert = c(rnorm(100, mean = 3), 
+                           rnorm(100, mean = 4)))
+
+# Boxplot
+boxplot(Wert ~ Gruppe, data = dat)
+```
+
+## Beschriftungen
+
+Natürlich soll Ihre Abbildung auch eine Beschriftung erhalten. Sie wird der Option `#| fig-cap:` eingefügt. Solche Optionen - die grundsätzlich mit `#|` beginnen - werden immer in die ersten Zeilen des R-Chunks eingegeben
+
+::: column-margin
+`#| fig-cap:`
+:::
+
+![](Bilder/chunk02.png)
+
+![](Bilder/boxplot02.png) Die Beschriftung wurde schon einmal erzeugt. Um sie auch noch zu nummerieren, muss den R-Chunkt auch noch ein `#| label:` hinzugefügt werden, das mit `fig-` beginnt:
+
+::: column-margin
+Automatische Nummerierung mit `#| label: fig-...`
+:::
+
+![](Bilder/chunk03.png) ![](Bilder/boxplot03.png) Nachdem die automatische Nummerierung funktioniert, sollte die Bezeichnung nun aber auch in deutscher Sprache sein, also "Abbildung" statt "Figure". Das können Sie erreichen, indem Sie die Spracheinstellungen des gesamten Dokuments auf Deutsch setzten. Gehen Sie zurück zum YAML-header und ergänzen Sie `lang: de`.
+
+::: column-margin
+Mit `lang: de` deutsche Spracheinstellung im YAML-header festlegen
+:::
+
+![](Bilder/yaml01.png)
+
+Jetzt sollte der Boxplot so aussehen:
+
+![](Bilder/boxplot04.png)
+
+::: column-margin
+`echo: false` blendet die R-Syntax aus.
+:::
+
+Wenn Sie in Ihrem Ausgabedokument die R-Syntax ausblenden wollen, können Sie im YAML-header die Option `echo: false` ergänzen, um sie für das gesamte Dokument auszublenden. Sie können das aber auch nur für einzelne R-Chunks festlegen, wenn sie dort `#| echo: false` einfügen.
+
+## Querverweise
+
+Um in Ihren Text Querverweise auf eine Grafik einzufügen, tippen Sie einfach `@` in Verbindung mit dem Label, dass Sie der Abbildung zugewiesen haben.
+
+::: column-margin
+`@fig-...`
+:::
+
+![](Bilder/querverweis.png) ![](Bilder/querverweisHTML.png)
+
+## Zitationen
+
+::: column-margin
+*Insert - \@ Citation...*
+:::
+
+Um Quellenangaben zu machen, wechseln Sie in den *Visual*-Modus und klicken Sie *Insert - \@ Citation...*.
+
+In dem jetzt erscheinenden Dialogfeld können Sie Zitationsangaben aus verschiedenen Datenbanken abrufen. Wenn Sie es installiert haben, greift Quarto direkt auf Ihre Zotero-Datenbank [@royrosenzweigcenterforhistoryandnewmedia2023] zurück. Sie können aber z.B. auch direkt in PubMed nach Zitationen suchen.
+
+
+
+```{r}
+#| label: cite02
+#| fig-cap: Dialogfeld zum Einfügen von Zitationen.
+#| cap-location: margin
+#| out-width: 80%
+
+knitr:: include_graphics("Bilder/cite02.png")
+```
+
+\newpage
+
+Um das Beispiel nachzuvollziehen, wählen Sie PubMed, suchen Sie nach "prel 2010" und wählen Sie den Artikel zur Auswahl statistischer Tests aus[^1]. Klicken Sie dann auf *Insert*.
+
+[^1]: So praktisch diese schnelle Online-Suche ist. Sie ersetzt keine gründliche Literaturrecherche!
+
+Quarto schreibt jetzt einen Querverweis (hier `[\@prel2010]`) ins Quelldokument. Gleichzeitig wird eine Textdatei "references.bib" in Ihrem Projektordner erzeugt, die die Bibliografischen Angaben enthält und im YAML-header wird die Zeile `bibliography: references.bib` ergänzt, um Quarto beim Erstellen der Ausgabedatei mitzuteilen, dass die bibliografischen Informationen dort zu finden sind.
+
+Probieren Sie jetzt noch einmal ![](Bilder/Render.png){width="64"} und schauen sich das Ergebnis an. Die Zitation sollte an der entsprechenden Stelle im Text eingefügt sein und am Ende des Dokuments befindet sich jetzt ein Literaturverzeichnis.
+
+::: column-margin
+Zusatz: `[@label, Zusatz]`\`
+
+Nur Jahr: `@label`\`
+:::
+
+Wenn Sie eine Seitenangabe ergänzen möchten, schreiben Sie sie einfach innerhalb der eckigen Klammern hinter den Querverweis: `[@prel2010, S. 346]`. Wenn Sie die Auto/innen im Kurzverweis weg lassen wollen, entfernen Sie die eckigen Klammern: `@prel2010`.
+
+::: column-margin
+Andere Zitationsstile verwenden
+:::
+
+Unter <https://www.zotero.org/styles> können Sie auch andere Zitationsstile im csl-Format herunterladen. Speichern Sie die entsprechende csl-Datei in Ihrem Projektordner und ergänzen Sie den YAML-header um `csl: Name_der_Datei.csl`\`.
+
+## T-Test
+
+Um endlich den T-Test zu berechnen, fügen Sie einen weiteren R-Chunk ein:
+
+::: column-margin
+Ausgabe des T-Tests
+:::
+
+```{r}
+#| echo: fenced
+
+# T-Test
+t.test(Wert ~ Gruppe, data = dat)
+```
+
+## R-Ausgaben im Fließtext
+
+::: column-margin
+![](Bilder/inlineCode01.png){height="20px"}
+:::
+
+Die Ausgabe des T-Tests wurde jetzt genauso dargestellt, wie sie auch in R ausgegeben wird. Es ist aber auch möglich, R-Ausgaben direkt in den Freitext zu integrieren. Rahmen Sie die R-Funktion dafür nach dem Muster ![](Bilder/inlineCode01.png){width="98"}[^2] ein, z.B. die Mittelwerte der beiden Gruppen:
+
+[^2]: Das Zeichen zum Einfügen von R-Ausgaben in den Fließtext ist kein einfaches Anführungszeichen (Hochstell - Raute) sondern ein Akzent (Taste rechts neben dem ß, hochgestellt).
+
+![](Bilder/inlineCode02.png)
+
+In der Ausgabe sieht das dann so aus:
+
+![](Bilder/inlineCodeHTML01.png) Zwei Probleme gibt es bei dieser Ausgabe noch. Erstens werden viel zu viele Nachkommastellen angegeben. Die lassen sich leicht mit der R-Funktion `round()` reduzieren.
+
+![](Bilder/inlineCode03.png)
+
+Zweitens wird der Dezimaltrenner als Punkt angezeigt. Das ist die Standardeinstellung von R, aber Sie können es ändern. Fügen Sie in den ersten R-Chunk `options(OutDec = ",")` ein.
+
+![](Bilder/outDec.png)
+
+Jetzt haben Sie alle Elemente beisammen, um das Beispieldokument zu reproduzieren und damit auch fast alle Aspekte, die für die Erstellung wissenschaftlicher Dokumente wichtig sind. Vergleichen Sie bitte Ihr Quelldokument und Ihr Ausgabedokument noch einmal mit @fig-source und @fig-html.
+
+# Tabellen
+
+::: column-margin
+`knitr::kable()`
+:::
+
+Ein weiterer wichtiger Aspekt bei der Erstellung wissenschaftlicher Dokumente sind Tabellen. Es gibt in Quarto verschiedene Möglichkeiten dafür. Bei einfachen Tabellen eignet sich die Funktion `kable()` aus dem vorinstallierten Paket *knitr* [@xie2023] sehr gut.
+
+```{r}
+#| echo: fenced
+#| label: tbl-Deskriptiv
+#| tbl-cap: Deskriptive Statistiken der fiktiven Daten.
+
+# Statistiken in einem data.frame bündeln.
+desk <- data.frame(Gesamt = unclass(summary(dat$Wert)),
+                   Gruppe.A = unclass(summary(dat$Wert[dat$Gruppe == "A"])),
+                   Gruppe.B = unclass(summary(dat$Wert[dat$Gruppe == "B"])))
+
+# Tabelle mit kable() erstellen.
+knitr::kable(round(desk, 2))
+
+```
+
+Label und Beschriftung werden hier analog zu den Abbildungen mit dem Präfix `tbl-` angegeben, um festzulegen, dass es sich um Tabellen handelt.
+
+::: column-margin
+flextable
+:::
+
+Für kompliziertere Tabellen empfehle ich das Paket *flextable* [@gohel2020], das Sie dann allerdings zusätzlich installieren müssen.
+
+# Noch ein paar YAML-Einstellungen 
+
+::: column-margin
+`number-sections:`
+:::
+
+Wenn Sie nummerierte Überschriften haben möchten, ergänzen Sie im YAML-header `number-sections: true`.
+
+::: column-margin
+`toc:`
+:::
+
+Für ein Inhaltsverzeichnis ergänzen Sie `toc: true.`
+
+::: column-margin
+`lof:` und `lot:`
+:::
+
+Ein Abbildungsverzeichnis erhalten Sie mit `lof: true` und ein Verzeichnis der Tabellen mit `lot: true`.
+
+::: column-margin
+`format: docx` und `format: odt`
+:::
+
+Probieren Sie einmal `format: docx` oder `format: odt` aus, um ein MS-Word- oder LibreOffice-Dokument zu erstellen.
+
+::: column-margin
+`format: pdf`
+:::
+
+Wenn Sie mit `format: pdf` ein pdf-Dokument erstellen wollen, muss zusätzlich ein Programm zur Erstellung von LaTeX-Dokumenten installiert sein (siehe @sec-Motorhaube).
+
+::: column-margin
+Präsentationsformate `pptx`, `beamer` und `revealjs`
+:::
+
+Probieren Sie einmal ein Präsentationsformat aus mit `format: pptx`. `format: beamer` erstellt eine pdf-Präsentation und `format: revealjs` eine sehr flexible HTML-Präsentation.
+
+# Ein kleiner Blick unter die Motorhaube {#sec-Motorhaube}
+
+Wenn Sie ein Quarto-Quelldokument in ein Ausgabedokument umwandeln, werden mehrere Schritte durchlaufen:
+
+-   Das qmd-Dokument wird vom R-Paket *knitr* [@xie2023] in ein *Markdown*-Dokument [@gruber2004] umgewandelt. Insbesondere ist das für die R-Chunks notwendig. Der Fließtext folgt bereits dem *Markdown*-Format.
+-   Das *Markdown*-Dokument (mit der Endung .md) wird von dem Programm *Pandoc* [@macfarlane2023] weiter in ganz verschiedene Dokumente (z.B. im HTML-, docx-, oder pdf-Format) umgewandelt.
+
+*knitr*, *Markdown* und *pandoc* werden mit *RStudio* automatisch mit installiert. Für die Umwandlung in ein pdf-Dokument muss zusätzlich eine LaTeX-Distribution installiert sein.
+
+::: column-margin
+*tinytex*
+:::
+
+Falls Sie noch kein LaTeX-Programm auf Ihrem Computer haben, empfehle ich eine Installation über das R-Paket *tinytex* [@xie2021]. Dabei wird eine minimale Programminstallation vorgenommen und nur die wirklich notwendigen Zusatzpakete werden beim Erstellen der Ausgabedokumente automatisch nachinstalliert.
+
+```{r}
+#| echo: true
+#| eval: false
+
+    # Das R-Paket Tinytex installieren
+    install.packages("tinytex")
+
+    # Das Programm Tex installieren
+    tinytex::install_tinytex()
+```
+
+::: column-margin
+Viele Ausgabeformate aus dem gleichen Quelldokument?
+:::
+
+Vom Prinzip her sollte sich das gleiche Quarto-Quelldokument problemlos in alle möglichen Ausgabeformate übersetzen lassen. Je ausgefeilter und detailierter Sie allerdings das Layout beeinflussen, umso größer werden die Unterschiede in den Ausgaben und Sie müssen sich dann doch eher auf ein Format konzentrieren.
+
+::: column-margin
+Dokumentation: <https://quarto.org/>
+:::
+
+Unter <https://quarto.org/> finden Sie eine umfangreiche Dokumentation von Quarto.
+
+# Literatur

@@ -1,0 +1,35 @@
+---
+title: "Quarto-Beispieldokument"
+author: "Johann Popp"
+format: revealjs
+lang: de
+echo: false
+bibliography: references.bib
+---
+
+In diesem Dokument wird beispielhaft demonstriert, wie in einem Quarto-Quelldokument Freitext mit R-Syntax kombiniert und in ein Ausgabedokument überführt wird.
+
+# Beispiel
+Hier werden fiktionale Daten erzeugt, grafisch dargestellt (siehe @fig-Grafik01) und schließlich wird ein T-Test [@prel2010] berechnet.
+```{r}
+#| label: fig-Grafik01
+#| fig-cap: Beispielboxplot (fiktionale Daten)
+
+# Dezimaltrennzeichen auf "," setzen.
+options(OutDec = ",")
+
+# Daten erzeugen
+dat <- data.frame(Gruppe = rep(c("A", "B"), each = 100),
+                  Wert = c(rnorm(100, mean = 3), 
+                           rnorm(100, mean = 4)))
+
+# Boxplot
+boxplot(Wert ~ Gruppe, data = dat)
+```
+
+Der Mittelwert in Gruppe A ist `r round(mean(dat$Wert[dat$Gruppe == "A"]), 2)`, der Mittelwert in Gruppe B `r round(mean(dat$Wert[dat$Gruppe == "B"]), 2)`.
+```{r}
+# T-Test
+t.test(Wert ~ Gruppe, data = dat)
+```
+
