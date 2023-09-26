@@ -8,7 +8,10 @@ format:
     self-contained: true
     grid:
       margin-width: 350px
-  pdf: default
+    csl: sage-vancouver-brackets.csl
+  pdf: 
+    csl: american-journal-of-archaeology.csl
+  
 reference-location: margin
 number-sections: true
 echo: false
@@ -16,7 +19,7 @@ lang: de
 bibliography: references.bib
 
 #csl: american-journal-of-archaeology.csl
-csl: sage-vancouver-brackets.csl
+#csl: sage-vancouver-brackets.csl
 ---
 
 Im Sinne reproduzierbarer Wissenschaft ist es wünschenswert, die gesamte Datenanalyse vom Laden der Daten über die Datenaufbereitung, deskriptive Analyse, Modellbildung bis hin zur Beschreibung und Interpretation in einem Quelldokument zusammenzufassen, aus dem dann Berichte und Präsentationen erzeugt werden können. Quarto [@allaire2022, <https://quarto.org>] hilft Ihnen dabei, indem es Freitext mit Programmcode aus R, Python, Julia und anderen Programmiersprachen zu einem Quelldokument verknüpft. Aus diesem Dokument werden dann Berichte und Präsentationen in verschiedenen Formaten (z.b. HTML, PDF, MS-Word) erzeugt.
